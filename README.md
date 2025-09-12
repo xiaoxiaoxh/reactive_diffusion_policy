@@ -53,7 +53,7 @@
 - [x] Release the [checkpoints](https://huggingface.co/WendiChen/reactive_diffusion_policy_model).
 - [x] Add [guide for customized tasks, tactile / force sensors and robots](docs/customized_deployment_guide.md).
 - [x] Add [guide for creating the tactile dataset and the tactile embedding](docs/tactile_embedding_guide.md).
-- [ ] Support more robots (e.g. Franka) (ETA: July 2025).
+- [x] Support more robots (e.g. Franka) (ETA: July 2025).
 
 ## ⚙️ Environment Setup
 ### 📝 Use Customized Tactile / Force Sensors, Robots and Customized Tasks
@@ -67,8 +67,9 @@ Please refer to [docs/customized_deployment_guide.md](docs/customized_deployment
       If GelSight Mini is used, a high-performance CPU (e.g., Core i9-13900K) is required to
       ensure 24 FPS tactile sensing.
 - 2 robot arms with (optional) joint torque sensors.
-    > We use [Flexiv Rizon 4](https://www.flexiv.com/products/rizon) with the [GRAV](https://www.flexiv.com/products/grav) gripper by default and 
-      will support single-arm robot and other robots soon.
+    > We use [Flexiv Rizon 4](https://www.flexiv.com/products/rizon) with the [GRAV](https://www.flexiv.com/products/grav) gripper by default.
+    > We also support [Franka Research 3](https://franka.de/franka-research-3) with [Frankahand](https://download.franka.de/documents/220010_Product%20Manual_Franka%20Hand_1.2_EN.pdf) for teleoperation and policy rollout.
+    > We now support single-arm robot.
 - 1-3 [RealSense](https://www.intelrealsense.com) cameras.
     > We use D435 for wrist camera and D415 for external cameras.
       Follow the [official document](https://dev.intelrealsense.com/docs/compiling-librealsense-for-linux-ubuntu-guide) to install librealsense2. 
@@ -92,7 +93,10 @@ to install ROS2 Humble.
    pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
    pip install -r requirements.txt
    ```
-3. (Optional) Follow [third_party/mvsdk/README.md](third_party/mvsdk/README.md)
+3. (Optional) If you want to experiment on Franka, you can refer to [docs/franka_setup_instructions.md](docs/franka_setup_instructions.md) 
+   for configuration.
+
+4. (Optional) Follow [third_party/mvsdk/README.md](third_party/mvsdk/README.md)
    to install MindVision SDK. This package is needed only if you want to
    record experiment videos with MindVision cameras.
 
