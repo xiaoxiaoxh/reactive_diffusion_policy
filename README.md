@@ -11,22 +11,22 @@
     Best Student Paper Award Finalist
 </h4>
 <p align="center">
-    <a href="https://hanxue.me">Han Xue</a><sup>1*</sup>,
-    Jieji Ren<sup>1*</sup>,
-    <a href="https://wendichen.me">Wendi Chen</a><sup>1*</sup>,
+    <a href="https://hanxue.me">Han Xue</a><sup>2*</sup>,
+    Jieji Ren<sup>2*</sup>,
+    <a href="https://wendichen.me">Wendi Chen</a><sup>12*</sup>,
     <br>
-    <a href="https://www.gu-zhang.com">Gu Zhang</a><sup>234†</sup>,
-    Yuan Fang<sup>1†</sup>,
-    <a href="https://softrobotics.sjtu.edu.cn">Guoying Gu</a>,
-    <a href="http://hxu.rocks">Huazhe Xu</a><sup>234‡</sup>,
-    <a href="https://www.mvig.org">Cewu Lu</a><sup>15‡</sup>
+    <a href="https://www.gu-zhang.com">Gu Zhang</a><sup>345†</sup>,
+    Yuan Fang<sup>2†</sup>,
+    <a href="https://softrobotics.sjtu.edu.cn">Guoying Gu</a><sup>2</sup>,
+    <a href="http://hxu.rocks">Huazhe Xu</a><sup>345‡</sup>,
+    <a href="https://www.mvig.org">Cewu Lu</a><sup>12‡</sup>
     <br>
-    <sup>1</sup>Shanghai Jiao Tong University
-    <sup>2</sup>Tsinghua University, IIIS
-    <sup>3</sup>Shanghai Qi Zhi Institute
+    <sup>1</sup>Shanghai Innovation Institute
+    <sup>2</sup>Shanghai Jiao Tong University
     <br>
-    <sup>4</sup>Shanghai AI Lab
-    <sup>5</sup>Shanghai Innovation Institute
+    <sup>3</sup>Tsinghua University, IIIS
+    <sup>4</sup>Shanghai Qi Zhi Institute
+    <sup>5</sup>Shanghai AI Lab
     <br>
     <sup>*</sup>Equal contribution
     <sup>†</sup>Equal contribution
