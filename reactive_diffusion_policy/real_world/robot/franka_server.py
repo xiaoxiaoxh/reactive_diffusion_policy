@@ -18,12 +18,14 @@ from collections import deque
 import uvicorn
 import argparse
 import multiprocessing as mp
+from scipy.spatial.transform import Rotation as ScipyRotation
 
 from polymetis import RobotInterface, GripperInterface
 
 from reactive_diffusion_policy.common.data_models import (TargetTCPRequest, MoveGripperRequest, BimanualRobotStates)
 from reactive_diffusion_policy.common.pose_trajectory_interpolator import PoseTrajectoryInterpolator
 from reactive_diffusion_policy.common.precise_sleep import precise_wait
+
 
 class Command(enum.Enum):
     STOP = 0
@@ -220,12 +222,101 @@ class FrankaServer:
         # libfranka Robot State has no element 'tcp_velocities'
         robot_state = self.robot.get_robot_state()
         gripper_state = self.gripper.get_state()
+        tcp_wrench = self.get_tcp_wrench_flange().tolist() # (fx, fy, fz, mx, my, mz)
+        tcp_vel = self.get_tcp_velocity_flange().tolist() # (vx, vy, vz, wx, wy, wz)
         ee_pose = self.get_current_tcp()
         return {
-            "leftRobotTCP": ee_pose, # (x, y, z, qw, qx, qy, qz), in flange coordinate 
-            "leftRobotTCPWrench": robot_state.motor_torques_external.tolist(), # (fx, fy, fz, mx, my, mz)
-            "leftGripperState": [gripper_state.width, 0] # (width, force)
+            "leftRobotTCP": ee_pose, # (x, y, z, qw, qx, qy, qz), in flange coordinate
+            "leftRobotTCPWrench": tcp_wrench, # (fx, fy, fz, mx, my, mz), in flange coordinate
+            "leftRobotTCPVelocity": tcp_vel, # (vx, vy, vz, wx, wy, wz), in flange coordinate
+            "leftGripperState": [gripper_state.width, gripper_state.force] # (width, force)
         }
+
+    def get_base_to_flange_rotation_matrix(self) -> torch.Tensor:
+        """
+        Return:
+            torch.Tensor: 3x3 rotation matrix from robot base frame to flange frame
+        """
+        joint_pos = self.robot.get_joint_positions()
+        _pos, quat = self.robot.robot_model.forward_kinematics(joint_pos) # quat: (x, y, z, w)
+
+        # transform quaternion to rotation matrix
+        quat_np = quat.numpy()
+        r = ScipyRotation.from_quat(quat_np)
+        rotation_matrix = torch.from_numpy(r.as_matrix()).to(joint_pos.dtype) # transformation matrix from base to flange(3x3)
+        
+        return rotation_matrix
+    
+    def get_tcp_wrench(self) -> torch.Tensor:
+        """
+        Return:
+            torch.Tensor: TCP wrench under robot base frame (fx, fy, fz, mx, my, mz)
+            Additional coordinate transformation is needed if want to convert to flange frame(refer to get_tcp_wrench_flange).
+        """
+        robot_state = self.robot.get_robot_state()
+        joint_pos = torch.Tensor(robot_state.joint_positions)
+        tau_external = torch.Tensor(robot_state.motor_torques_external)
+
+        # compute Jacobian matrix
+        jacobian = self.robot.robot_model.compute_jacobian(joint_pos)
+
+        # compute TCP wrench
+        # F_tcp = (J^T)^+ * tau_external
+        # J_transpose_pseudo_inv = torch.linalg.pinv(jacobian.T)
+        # wrench = J_transpose_pseudo_inv @ tau_external
+        wrench, _, _, _ = torch.linalg.lstsq(jacobian.T, tau_external)
+        return wrench
+
+    def get_tcp_velocity(self) -> torch.Tensor:
+        """
+        Return:
+            torch.Tensor: (vx, vy, vz, wx, wy, wz),
+            TCP velocity under robot base frame
+            Additional coordinate transformation is needed if want to convert to flange frame.(refer to get_tcp_velocity_flange).
+        """
+        robot_state = self.robot.get_robot_state()
+        joint_pos = torch.Tensor(robot_state.joint_positions)
+        joint_vel = torch.Tensor(robot_state.joint_velocities)
+
+        # compute Jacobian matrix J
+        jacobian = self.robot.robot_model.compute_jacobian(joint_pos)
+
+        # compute TCP velocity V = J * q_dot
+        tcp_velocity = jacobian @ joint_vel
+
+        return tcp_velocity
+
+    def get_tcp_velocity_flange(self) -> torch.Tensor:
+        """
+        Returns:
+            TCP velocity under flange frame
+        """
+        R_flange_in_base = self.get_base_to_flange_rotation_matrix()
+        R_base_to_flange = R_flange_in_base.T
+        tcp_velocity_base = self.get_tcp_velocity()
+
+        v_base = tcp_velocity_base[0:3]
+        w_base = tcp_velocity_base[3:6]
+        v_flange = R_base_to_flange @ v_base
+        w_flange = R_base_to_flange @ w_base       
+        tcp_velocity_flange = torch.cat([v_flange, w_flange])
+        
+        return tcp_velocity_flange
+
+    def get_tcp_wrench_flange(self) -> torch.Tensor:
+        """
+        Returns:            
+            TCP wrench under flange frame
+        """
+        R_flange_in_base = self.get_base_to_flange_rotation_matrix()
+        R_base_to_flange = R_flange_in_base.T
+        tcp_wrench_base = self.get_tcp_wrench()
+
+        f_flange = R_base_to_flange @ tcp_wrench_base[0:3]
+        m_flange = R_base_to_flange @ tcp_wrench_base[3:6]
+        tcp_wrench_flange = torch.cat([f_flange, m_flange])
+        
+        return tcp_wrench_flange
 
     def go_home(self):
         home_joint_positions = [-0.07, -0.96, -0.01, -2.55, -0.09, 2.14, 0.59]
