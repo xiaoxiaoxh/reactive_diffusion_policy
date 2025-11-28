@@ -268,7 +268,7 @@ class RealImageTactileDataset(BaseImageDataset):
             if self.relative_tcp_obs_for_relative_action:
                 for key in self.lowdim_keys:
                     if 'robot_tcp_pose' in key and 'wrt' not in key:
-                        obs_dict[key]  = absolute_actions_to_relative_actions(obs_dict[key], base_absolute_action=base_absolute_action)
+                        obs_dict[key]  = absolute_actions_to_relative_actions(obs_dict[key], base_absolute_action=obs_dict[key][-1])
 
         torch_data = {
             'obs': dict_apply(obs_dict, torch.from_numpy),
