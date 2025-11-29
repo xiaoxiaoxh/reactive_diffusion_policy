@@ -1,0 +1,43 @@
+# Deoxys adopts a distinct approach for intializing both the PC and the NUC.
+# We adopt the official example configurations for the robot here.
+
+PC:
+  NAME: "control_pc"           
+  IP: 192.168.110.111          # the ip_address of PC in the PC-NUC network
+
+NUC:
+  NAME: "franka_nuc"           
+  IP: 192.168.110.1            # the ip_address of NUC in the PC-NUC network
+  PUB_PORT: 5556               # the port for NUC to publish robot state to PC
+  SUB_PORT: 5555               # the port for NUC to subscribe to control commands from PC
+  GRIPPER_PUB_PORT: 5558       # the port for NUC to publish gripper state to PC
+  GRIPPER_SUB_PORT: 5557       # the port for NUC to subscribe to gripper commands from PC
+
+ROBOT:
+  IP: 172.16.0.2               # the ip_address of Franka robot in the NUC-Robot network
+
+CONTROL:
+  STATE_PUBLISHER_RATE: 100    # the rate at which state is published
+  POLICY_RATE: 20               # the rate at which policy is updated (overridden by control_freq in Python code)
+  TRAJ_RATE: 300                # the rate at which trajectory is interpolated (matches your 300Hz)
+  ZMQ_NOBLOCK: true
+
+ARM_LOGGER:
+  CONSOLE:
+    LOGGER_NAME: "arm_logger"
+    LEVEL: "info"
+    USE: true
+  FILE:
+    LOGGER_NAME: "logs/deoxys_arm.log"
+    LEVEL: "debug"
+    USE: false
+
+GRIPPER_LOGGER:
+  CONSOLE:
+    LOGGER_NAME: "gripper_logger"
+    LEVEL: "info"
+    USE: true
+  FILE:
+    LOGGER_NAME: "logs/deoxys_gripper.log"
+    LEVEL: "debug"
+    USE: false

@@ -9,7 +9,8 @@ from reactive_diffusion_policy.real_world.real_world_transforms import RealWorld
 from reactive_diffusion_policy.real_world.teleoperation.teleop_server import TeleopServer
 from reactive_diffusion_policy.real_world.publisher.bimanual_robot_publisher import BimanualRobotPublisher
 from reactive_diffusion_policy.real_world.robot.bimanual_flexiv_server import BimanualFlexivServer
-from reactive_diffusion_policy.real_world.robot.franka_server import FrankaServer
+# from reactive_diffusion_policy.real_world.robot.franka_server import FrankaServer
+from reactive_diffusion_policy.real_world.robot.franka_server_deoxys import FrankaServer
 import hydra
 from omegaconf import DictConfig
 from loguru import logger
