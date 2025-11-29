@@ -20,7 +20,8 @@ class BimanualFlexivServer():
                  left_robot_ip="192.168.2.110",
                  right_robot_ip="192.168.2.111",
                  use_planner: bool = False,
-                 bimanual_teleop: bool = True
+                 bimanual_teleop: bool = True,
+                 **kwargs
                  ) -> None:
         
         self.host_ip = host_ip

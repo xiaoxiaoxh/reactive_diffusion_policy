@@ -45,7 +45,8 @@ class FrankaServer:
                  Kxd_scale=1.0,
                  vr_frequency=60,
                  frequency=300,
-                 bimanual_teleop=False):
+                 bimanual_teleop=False,
+                 **kwargs):
         """
         robot_ip: ip address of Desktop directly connected to Franka Emika
         gripper_ip: ip address of Desktop directly connected to Franka Emika

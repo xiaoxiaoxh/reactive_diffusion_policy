@@ -4,6 +4,7 @@ robot_server:
   port: 8092
   left_robot_ip: "192.168.2.110"
   right_robot_ip: "192.168.2.111"
+  robot_config_file: 'reactive_diffusion_policy/config/robot/charmander.yaml'
   bimanual_teleop: &bimanual_teleop True
 publisher:
   vr_server_ip: &vr_server_ip '192.168.2.205'
