@@ -249,4 +249,11 @@ If you find our work useful, please consider citing:
   booktitle = {Proceedings of Robotics: Science and Systems (RSS)},
   year      = {2025}
 }
+
+@article{chen2025implicitrdp,
+  title     = {ImplicitRDP: An End-to-End Visual-Force Diffusion Policy with Structural Slow-Fast Learning},
+  author    = {Chen, Wendi and Xue, Han and Wang, Yi and Zhou, Fangyuan and Lv, Jun and Jin, Yang and Tang, Shirun and Wen, Chuan and Lu, Cewu},
+  journal   = {arXiv preprint arXiv:2512.10946},
+  year      = {2025}
+}
 ```
