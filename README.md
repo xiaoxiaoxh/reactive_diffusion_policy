@@ -47,7 +47,8 @@
 </p>
 
 ## News
-- We propose [ImplicitRDP](https://implicit-rdp.github.io), an end-to-end version of RDP with a streamlined and simplified training pipeline — go [check it out](https://implicit-rdp.github.io)! 🚀 
+- The [code](https://github.com/Chen-Wendi/ImplicitRDP) of [ImplicitRDP](https://implicit-rdp.github.io) has been open-sourced, feel free to [explore it and give it a try](https://github.com/Chen-Wendi/ImplicitRDP)! 🚀
+- We propose [ImplicitRDP](https://implicit-rdp.github.io), an end-to-end version of RDP with a streamlined and simplified training pipeline — go [check it out](https://implicit-rdp.github.io)! 🚀
 
 ## TODO
 - [x] Release the code of TactAR and [Quest3 APP](https://github.com/xiaoxiaoxh/TactAR_APP).
