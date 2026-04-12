@@ -76,7 +76,8 @@ Please refer to [docs/customized_deployment_guide.md](docs/customized_deployment
     > We now support single-arm robot.
 - 1-3 [RealSense](https://www.intelrealsense.com) cameras.
     > We use D435 for wrist camera and D415 for external cameras.
-      Follow the [official document](https://dev.intelrealsense.com/docs/compiling-librealsense-for-linux-ubuntu-guide) to install librealsense2. 
+      Follow the [official document](https://dev.intelrealsense.com/docs/compiling-librealsense-for-linux-ubuntu-guide) to install librealsense2.
+      Download the [CAD model](https://drive.google.com/drive/folders/13tS5cMgPOnqIQvKm3XiM-n6DmyEc4qy2?usp=share_link) (redesigned, not the paper version) and 3D print the mount to attach the camera to the robot arm.
 - (Optional) 1-2 [GelSight Mini](https://www.gelsight.com/gelsightmini) tactile sensors with [tracking marker gel](https://www.gelsight.com/product/tracking-marker-replacement-gel).
     > We use 1 sensor for each robot arm. Download the [CAD model](https://drive.google.com/drive/folders/13tS5cMgPOnqIQvKm3XiM-n6DmyEc4qy2?usp=share_link) and 3D print the mount to attach the sensor to the GRAV gripper.
 
