@@ -53,36 +53,46 @@ class ROS2DataConverter:
     def convert_robot_states(self, topic_dict: Dict) -> (
             Tuple)[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         left_tcp_pose: PoseStamped = topic_dict['/left_tcp_pose']
-        right_tcp_pose: PoseStamped = topic_dict['/right_tcp_pose']
-
         left_gripper_state: JointState = topic_dict['/left_gripper_state']
-        right_gripper_state: JointState = topic_dict['/right_gripper_state']
-
         left_tcp_vel: TwistStamped = topic_dict['/left_tcp_vel']
-        right_tcp_vel: TwistStamped = topic_dict['/right_tcp_vel']
-
         left_tcp_wrench: WrenchStamped = topic_dict['/left_tcp_wrench']
-        right_tcp_wrench: WrenchStamped = topic_dict['/right_tcp_wrench']
 
         left_tcp_pose_array = ros_pose_to_6d_pose(left_tcp_pose.pose)
-        right_tcp_pose_array = ros_pose_to_6d_pose(right_tcp_pose.pose)
-
         left_tcp_vel_array = np.array([left_tcp_vel.twist.linear.x, left_tcp_vel.twist.linear.y, left_tcp_vel.twist.linear.z,
                                  left_tcp_vel.twist.angular.x, left_tcp_vel.twist.angular.y,
                                  left_tcp_vel.twist.angular.z])
-        right_tcp_vel_array = np.array(
-            [right_tcp_vel.twist.linear.x, right_tcp_vel.twist.linear.y, right_tcp_vel.twist.linear.z,
-             right_tcp_vel.twist.angular.x, right_tcp_vel.twist.angular.y, right_tcp_vel.twist.angular.z])
-
         left_tcp_wrench_array = np.array(
             [left_tcp_wrench.wrench.force.x, left_tcp_wrench.wrench.force.y, left_tcp_wrench.wrench.force.z,
              left_tcp_wrench.wrench.torque.x, left_tcp_wrench.wrench.torque.y, left_tcp_wrench.wrench.torque.z])
-        right_tcp_wrench_array = np.array(
-            [right_tcp_wrench.wrench.force.x, right_tcp_wrench.wrench.force.y, right_tcp_wrench.wrench.force.z,
-             right_tcp_wrench.wrench.torque.x, right_tcp_wrench.wrench.torque.y, right_tcp_wrench.wrench.torque.z])
-
         left_gripper_state_array = np.array([left_gripper_state.position[0], left_gripper_state.effort[0]])
-        right_gripper_state_array = np.array([right_gripper_state.position[0], right_gripper_state.effort[0]])
+
+        right_tcp_pose: Optional[PoseStamped] = topic_dict.get('/right_tcp_pose')
+        if right_tcp_pose is not None:
+            right_tcp_pose_array = ros_pose_to_6d_pose(right_tcp_pose.pose)
+        else:
+            right_tcp_pose_array = np.zeros(6, dtype=np.float32)
+
+        right_gripper_state: Optional[JointState] = topic_dict.get('/right_gripper_state')
+        if right_gripper_state is not None and right_gripper_state.position and right_gripper_state.effort:
+            right_gripper_state_array = np.array([right_gripper_state.position[0], right_gripper_state.effort[0]])
+        else:
+            right_gripper_state_array = np.zeros(2, dtype=np.float32)
+
+        right_tcp_vel: Optional[TwistStamped] = topic_dict.get('/right_tcp_vel')
+        if right_tcp_vel is not None:
+            right_tcp_vel_array = np.array(
+                [right_tcp_vel.twist.linear.x, right_tcp_vel.twist.linear.y, right_tcp_vel.twist.linear.z,
+                 right_tcp_vel.twist.angular.x, right_tcp_vel.twist.angular.y, right_tcp_vel.twist.angular.z])
+        else:
+            right_tcp_vel_array = np.zeros(6, dtype=np.float32)
+
+        right_tcp_wrench: Optional[WrenchStamped] = topic_dict.get('/right_tcp_wrench')
+        if right_tcp_wrench is not None:
+            right_tcp_wrench_array = np.array(
+                [right_tcp_wrench.wrench.force.x, right_tcp_wrench.wrench.force.y, right_tcp_wrench.wrench.force.z,
+                 right_tcp_wrench.wrench.torque.x, right_tcp_wrench.wrench.torque.y, right_tcp_wrench.wrench.torque.z])
+        else:
+            right_tcp_wrench_array = np.zeros(6, dtype=np.float32)
 
         return (left_tcp_pose_array, right_tcp_pose_array, left_tcp_vel_array, right_tcp_vel_array,
                 left_tcp_wrench_array, right_tcp_wrench_array, left_gripper_state_array, right_gripper_state_array)

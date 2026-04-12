@@ -19,14 +19,18 @@ def get_topic_and_type(device_to_topic: DeviceToTopic):
 
     subs_name_type.extend([
         ('/left_tcp_pose', PoseStamped),
-        ('/right_tcp_pose', PoseStamped),
         ('/left_gripper_state', JointState),
-        ('/right_gripper_state', JointState),
         ('/left_tcp_vel', TwistStamped),
-        ('/right_tcp_vel', TwistStamped),
         ('/left_tcp_wrench', WrenchStamped),
-        ('/right_tcp_wrench', WrenchStamped)
     ])
+
+    if device_to_topic.bimanual_teleop:
+        subs_name_type.extend([
+            ('/right_tcp_pose', PoseStamped),
+            ('/right_gripper_state', JointState),
+            ('/right_tcp_vel', TwistStamped),
+            ('/right_tcp_wrench', WrenchStamped),
+        ])
 
     return subs_name_type
 

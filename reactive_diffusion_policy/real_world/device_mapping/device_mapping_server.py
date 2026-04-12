@@ -26,6 +26,7 @@ class UsbCameraInfo(BaseModel):
 class DeviceToTopic(BaseModel):
     realsense: Dict[str, RealsenseCameraInfo] = {}
     usb: Dict[str, UsbCameraInfo] = {}
+    bimanual_teleop: bool = True
 
 class DeviceMappingServer:
     """Server class that defines the device mapping (device to ROS topic name)"""
@@ -82,6 +83,13 @@ class DeviceMappingServer:
         get the device ids of the cameras in sequence
         usb camera ids is a list
         '''
+        robot_publisher_cfg = publisher_cfg.get("robot_publisher")
+
+        if robot_publisher_cfg is not None:
+            self.device_to_topic_mapping.bimanual_teleop = bool(
+                robot_publisher_cfg.get("bimanual_teleop", True)
+            )
+        
         usb_camera_ids = self.get_usb_camera_ids()
 
         # realsence camera
